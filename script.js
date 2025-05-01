@@ -44,5 +44,5 @@ function render() {
   });
 }
 
-setInterval(updateTimers, 30000);
+setInterval(updateTimers, 5000);
 window.onload = updateTimers;
