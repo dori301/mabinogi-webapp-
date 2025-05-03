@@ -42,6 +42,10 @@ button {
   background-color: #e6f7ff;
 }
 
+.character > div {
+  margin-bottom: 12px;  /* 은동전-공물 사이 간격 조절 */
+}
+
 .bar {
   width: 100%;
   height: 16px;
