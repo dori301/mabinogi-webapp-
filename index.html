@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>도리의 마비노기</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="header">
+    <h1>도리의 마비노기</h1>
+  </div>
+
+  <div class="tab-bar">
+    <button id="timerTab" class="tab-button active">은동전 / 공물 타이머</button>
+    <button id="checklistTab" class="tab-button">일일 숙제 체크리스트</button>
+  </div>
+
+  <hr />
+
+  <div id="timerContent" class="tab-content">
+    <button onclick="addCharacter()">캐릭터 추가</button>
+    <div id="characterList"></div>
+  </div>
+
+  <div id="checklistContent" class="tab-content hidden">
+    <div id="checklistContainer"></div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    window.onload = loadData;
+    document.getElementById("timerTab").onclick = () => {
+      document.getElementById("timerContent").classList.remove("hidden");
+      document.getElementById("checklistContent").classList.add("hidden");
+      document.getElementById("timerTab").classList.add("active");
+      document.getElementById("checklistTab").classList.remove("active");
+    };
+    document.getElementById("checklistTab").onclick = () => {
+      document.getElementById("timerContent").classList.add("hidden");
+      document.getElementById("checklistContent").classList.remove("hidden");
+      document.getElementById("checklistTab").classList.add("active");
+      document.getElementById("timerTab").classList.remove("active");
+    };
+  </script>
+</body>
+</html>
