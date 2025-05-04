@@ -18,13 +18,11 @@ body {
   padding: 20px;
 }
 
-/* 기본 컨테이너 */
 .container {
   max-width: 700px;
   margin: 0 auto;
 }
 
-/* 버튼 기본 */
 button {
   cursor: pointer;
 }
@@ -75,7 +73,6 @@ button {
 }
 
 /* ─── 은동전/공물 타이머 탭 ───────────────── */
-/* 전체 화면 너비 가로 스크롤 */
 #characterList {
   width: 100vw;
   position: relative;
@@ -85,16 +82,15 @@ button {
   flex-wrap: nowrap;
   gap: 12px;
   overflow-x: auto;
-  padding: 0 20px; /* body 패딩 보정 */
-  box-sizing: border-box;
+  padding: 0 20px;
 }
 
-/* 카드 */
+/* 카드 너비 조정 */
 .character {
   flex: none;
   width: 360px;
-  min-width: 300px;
-  margin: 0; /* gap 으로 간격 처리 */
+  min-width: 360px;
+  margin: 0;
   margin-bottom: 12px;
   min-height: 220px;
   border: 1px solid #87cefa;
@@ -103,21 +99,14 @@ button {
   background-color: #e6f7ff;
 }
 
-/* 입력칸 폭 축소 */
 .character label input[type="number"] {
-  width: 80px;
+  width: 100px;
   margin-left: 4px;
 }
 
-/* 타이머 텍스트 */
-.character .timer {
-  white-space: nowrap;
-  margin-left: 6px;
-}
-
-/* 진행 바 */
+/* 각 타이머 간격을 위해 바 아래에 여백 추가 */
 .bar {
-  margin-top: 5px;
+  margin: 5px 0 12px; /* 위 5px, 아래 12px 여백 */
   width: 100%;
   height: 16px;
   background-color: #d0e7ff;
@@ -131,7 +120,11 @@ button {
   transition: width 0.5s ease;
 }
 
-/* 삭제 버튼 */
+.character .timer {
+  white-space: nowrap;
+  margin-left: 6px;
+}
+
 .character button {
   margin-top: 5px;
   background: #ff4444;
@@ -141,7 +134,6 @@ button {
   border-radius: 5px;
 }
 
-/* 사용 버튼 */
 .character .use-buttons {
   margin-top: 5px;
 }
@@ -155,7 +147,6 @@ button {
 }
 
 /* ─── 일일 숙제 체크리스트 탭 ───────────────── */
-/* 전체 화면 너비 가로 스크롤 */
 #dailyQuestList {
   width: 100vw;
   position: relative;
@@ -165,22 +156,19 @@ button {
   flex-wrap: nowrap;
   gap: 12px;
   overflow-x: auto;
-  padding: 0 20px 20px; /* body 패딩/하단 여유 공간 보정 */
-  box-sizing: border-box;
+  padding: 0 20px 20px;
 }
 
-/* 캐릭터별 래퍼 */
 .daily-character {
   flex: none;
   width: 300px;
-  min-width: 300px;
-  margin: 0; /* gap 으로 간격 처리 */
+  margin: 0;
   padding: 8px;
   border-radius: 8px;
   background: #f3faff;
 }
 
-/* 각 퀘스트 박스 */
+/* 간격은 이미 충분하므로 변경 없음 */
 .daily-task {
   background: #e0f0ff;
   border-radius: 10px;
@@ -192,7 +180,6 @@ button {
   margin: 0 0 4px 0;
 }
 
-/* 체크 원 */
 .check-circle {
   display: inline-block;
   width: 16px;
@@ -207,8 +194,4 @@ button {
 
 .check-circle.checked {
   background-color: #007acc;
-}
-
-.tab-header > .tab-bar {
-  display: none;
 }
