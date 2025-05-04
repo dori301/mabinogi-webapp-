@@ -7,6 +7,14 @@
   --border:     #444;
 }
 
+/* 탭 콘텐츠 보이기/숨기기 */
+.tab-content {
+  display: none;
+}
+.tab-content:not(.hidden) {
+  display: block;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
