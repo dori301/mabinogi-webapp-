@@ -1,3 +1,6 @@
+// script.js
+
+// 페이지 로드 시 초기화
 document.addEventListener("DOMContentLoaded", function () {
   loadCharacters();
   loadDailyQuestsForAll();
@@ -5,9 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // ─── 은동전/공물 인터벌 정의 ─────────────────
-const COIN_INTERVAL_SEC    = 30 * 60;     // 30분(초 단위)
-const TRIBUTE_INTERVAL_SEC = 12 * 60 * 60; // 12시간(초 단위)
+const COIN_INTERVAL_SEC    = 30 * 60;      // 30분 (초 단위)
+const TRIBUTE_INTERVAL_SEC = 12 * 60 * 60; // 12시간 (초 단위)
 
+// 남은 시간을 시·분·초로 분해
 function formatHMS(totalSec) {
   const sec = totalSec % 60;
   const min = Math.floor((totalSec % 3600) / 60);
@@ -15,7 +19,7 @@ function formatHMS(totalSec) {
   return { hr, min, sec };
 }
 
-// 캐릭터 로드
+// 캐릭터 추가
 function addCharacter() {
   const name = prompt("캐릭터 이름을 입력하세요:");
   if (!name) return;
@@ -29,6 +33,7 @@ function addCharacter() {
   loadDailyQuestsForAll();
 }
 
+// 캐릭터 읽어와서 DOM에 출력
 function loadCharacters() {
   const characters = JSON.parse(localStorage.getItem("characters") || "[]");
   const container  = document.getElementById("characterList");
@@ -38,12 +43,12 @@ function loadCharacters() {
     const div = document.createElement("div");
     div.className = "character";
 
-    // 제목
+    // 이름
     const title = document.createElement("h3");
     title.textContent = name;
     div.appendChild(title);
 
-    // 은동전 입력 + 타이머
+    // — 은동전 입력 + 타이머 —
     const silverLabel = document.createElement("label");
     silverLabel.innerHTML = "은동전: ";
     const silverInput = document.createElement("input");
@@ -58,9 +63,13 @@ function loadCharacters() {
 
     const silverTime = document.createElement("span");
     silverTime.className = "timer";
-    // 다음 증가 시점 저장용
+    silverTime.dataset.name     = name;
     silverTime.dataset.interval = COIN_INTERVAL_SEC;
-    silverTime.dataset.until    = new Date(Date.now() + COIN_INTERVAL_SEC * 1000).toISOString();
+    const silverKey = `${name}_silver_until`;
+    // 저장된 만료 시점이 있으면 불러오고, 없으면 지금 + 30분
+    silverTime.dataset.until = localStorage.getItem(silverKey)
+      || new Date(Date.now() + COIN_INTERVAL_SEC * 1000).toISOString();
+    localStorage.setItem(silverKey, silverTime.dataset.until);
     div.appendChild(silverTime);
 
     // 은동전 진행바
@@ -71,7 +80,7 @@ function loadCharacters() {
     silverBar.appendChild(silverFill);
     div.appendChild(silverBar);
 
-    // 공물 입력 + 타이머
+    // — 공물 입력 + 타이머 —
     const tributeLabel = document.createElement("label");
     tributeLabel.innerHTML = "공물: ";
     const tributeInput = document.createElement("input");
@@ -86,8 +95,12 @@ function loadCharacters() {
 
     const tributeTime = document.createElement("span");
     tributeTime.className = "timer";
+    tributeTime.dataset.name     = name;
     tributeTime.dataset.interval = TRIBUTE_INTERVAL_SEC;
-    tributeTime.dataset.until    = new Date(Date.now() + TRIBUTE_INTERVAL_SEC * 1000).toISOString();
+    const tributeKey = `${name}_tribute_until`;
+    tributeTime.dataset.until = localStorage.getItem(tributeKey)
+      || new Date(Date.now() + TRIBUTE_INTERVAL_SEC * 1000).toISOString();
+    localStorage.setItem(tributeKey, tributeTime.dataset.until);
     div.appendChild(tributeTime);
 
     // 공물 진행바
@@ -98,7 +111,7 @@ function loadCharacters() {
     tributeBar.appendChild(tributeFill);
     div.appendChild(tributeBar);
 
-    // 사용 버튼
+    // — 사용 버튼 —
     const useDiv = document.createElement("div");
     useDiv.className = "use-buttons";
     const useSilver = document.createElement("button");
@@ -106,27 +119,33 @@ function loadCharacters() {
     useSilver.onclick = () => {
       silverInput.value = Math.max(0, silverInput.value - 10);
       silverInput.oninput();
-      // 사용 시점에 타이머도 리셋
-      silverTime.dataset.until = new Date(Date.now() + COIN_INTERVAL_SEC * 1000).toISOString();
+      // 사용 시점 타이머 리셋 & 저장
+      const next = new Date(Date.now() + COIN_INTERVAL_SEC * 1000).toISOString();
+      silverTime.dataset.until = next;
+      localStorage.setItem(silverKey, next);
     };
     const useTribute = document.createElement("button");
     useTribute.textContent = "공물 사용 (-1)";
     useTribute.onclick = () => {
       tributeInput.value = Math.max(0, tributeInput.value - 1);
       tributeInput.oninput();
-      tributeTime.dataset.until = new Date(Date.now() + TRIBUTE_INTERVAL_SEC * 1000).toISOString();
+      const next = new Date(Date.now() + TRIBUTE_INTERVAL_SEC * 1000).toISOString();
+      tributeTime.dataset.until = next;
+      localStorage.setItem(tributeKey, next);
     };
     useDiv.appendChild(useSilver);
     useDiv.appendChild(useTribute);
     div.appendChild(useDiv);
 
-    // 삭제 버튼
+    // — 삭제 버튼 —
     const delBtn = document.createElement("button");
     delBtn.textContent = "삭제";
     delBtn.onclick = () => {
       if (!confirm("정말 삭제할까요?")) return;
       localStorage.removeItem(name + "_silver");
       localStorage.removeItem(name + "_tribute");
+      localStorage.removeItem(silverKey);
+      localStorage.removeItem(tributeKey);
       const remain = characters.filter(c => c !== name);
       localStorage.setItem("characters", JSON.stringify(remain));
       loadCharacters();
@@ -140,6 +159,7 @@ function loadCharacters() {
   updateProgress();
 }
 
+// 진행바 비율 계산
 function updateProgress() {
   const characters = JSON.parse(localStorage.getItem("characters") || "[]");
   characters.forEach((name) => {
@@ -150,35 +170,13 @@ function updateProgress() {
       const tribute = parseInt(localStorage.getItem(name + "_tribute") || 0);
 
       const [silverFill, tributeFill] = div.querySelectorAll(".fill");
-      silverFill.style.width  = (silver  / 100) * 100 + "%";
-      tributeFill.style.width = (tribute / 10)  * 100 + "%";
+      silverFill.style.width  = Math.min(silver, 100)  + "%";
+      tributeFill.style.width = Math.min(tribute * 10, 100) + "%";
     });
   });
 }
 
-// 타이머 표시 및 자동 리셋
-setInterval(() => {
-  document.querySelectorAll(".timer").forEach(el => {
-    const interval = parseInt(el.dataset.interval, 10);
-    let end = new Date(el.dataset.until);
-    let now = new Date();
-    let diff = Math.floor((end - now) / 1000);
-
-    // 만료 시점에 자동으로 다시 interval만큼 리셋
-    if (diff <= 0) {
-      diff = interval;
-      el.dataset.until = new Date(now.getTime() + interval * 1000).toISOString();
-    }
-
-    const { hr, min, sec } = formatHMS(diff);
-    // 은동전(30분)은 hr이 항상 0이므로 자동으로 “0시간” 생략해도 되고
-    el.textContent = el.dataset.interval == COIN_INTERVAL_SEC
-      ? ` (${min}분 ${sec}초 후 +1)`
-      : ` (${hr}시간 ${min}분 ${sec}초 후 +1)`;
-  });
-}, 1000);
-
-// --- 이하 일일 숙제 체크리스트 로직은 그대로 ---
+// --- 일일 숙제 체크리스트 로직 그대로 유지 ---
 const dailyQuests = [
   { title: "검은 구멍", max: 3 },
   { title: "소환의 결계", max: 2 },
@@ -237,7 +235,7 @@ function loadDailyQuestsForAll() {
   });
 }
 
-// 매일 6시 리셋
+// 매일 오전 6시 리셋
 function resetIfNeeded() {
   const lastReset = localStorage.getItem("daily_reset_time");
   const now       = new Date();
@@ -254,3 +252,30 @@ function resetIfNeeded() {
     localStorage.setItem("daily_reset_time", now.toISOString());
   }
 }
+
+// 타이머 업데이트 및 자동 리셋
+setInterval(() => {
+  document.querySelectorAll(".timer").forEach(el => {
+    const interval = parseInt(el.dataset.interval, 10);
+    const name     = el.dataset.name;
+    const key      = interval === COIN_INTERVAL_SEC
+                     ? `${name}_silver_until`
+                     : `${name}_tribute_until`;
+
+    let end  = new Date(el.dataset.until);
+    let diff = Math.floor((end - new Date()) / 1000);
+
+    // 만료 시점 도달하면 interval로 재설정 및 저장
+    if (diff <= 0) {
+      diff = interval;
+      const next = new Date(Date.now() + interval * 1000).toISOString();
+      el.dataset.until = next;
+      localStorage.setItem(key, next);
+    }
+
+    const { hr, min, sec } = formatHMS(diff);
+    el.textContent = interval === COIN_INTERVAL_SEC
+      ? ` (${min}분 ${sec}초 후 +1)`
+      : ` (${hr}시간 ${min}분 ${sec}초 후 +1)`;
+  });
+}, 1000);
