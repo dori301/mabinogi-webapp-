@@ -191,10 +191,6 @@ button.delete {
   background-color: var(--accent);
 }
 
-.tab-bar {
-  display: none !important;
-}
-
 /* 타이머 설정 ⏰ 버튼 */
 .character button {
   /* 기존 스타일 유지 */
@@ -232,4 +228,12 @@ button.delete {
 }
 .drop-table tbody tr:nth-child(even) {
   background-color: var(--bg-card);
+}
+
+.tab-content {
+  display: block;
+}
+
+.tab-content.hidden {
+  display: none;
 }
