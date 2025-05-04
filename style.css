@@ -141,22 +141,26 @@ button {
 }
 
 /* ─── 일일 숙제 체크리스트 탭 ───────────────── */
-/* 세로 한 칼럼으로 나열 */
+/* 가로 일렬로 나열, 스크롤 허용 */
 #dailyQuestList {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
   gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 12px; /* 스크롤바 여유 공간 */
 }
 
 /* 캐릭터별 래퍼 */
 .daily-character {
   flex: none;
   width: 300px;
-  margin-bottom: 12px;
+  min-width: 300px;
+  margin: 0;            /* 위/아래 여백은 #dailyQuestList gap 으로 처리 */
   padding: 8px;
   border-radius: 8px;
   background: #f3faff;
+  box-sizing: border-box;
 }
 
 /* 각 퀘스트 박스 */
