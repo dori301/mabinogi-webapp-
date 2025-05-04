@@ -5,24 +5,25 @@
   font-style: normal;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   background-color: #f0f8ff;
   font-family: 'Jalnan2', sans-serif;
   color: #333;
   margin: 0;
   padding: 20px;
-  box-sizing: border-box;
 }
 
-*, *::before, *::after {
-  box-sizing: inherit;
-}
-
+/* 전체 컨테이너는 그대로 유지 */
 .container {
   max-width: 700px;
   margin: 0 auto;
 }
 
+/* 버튼 커서 */
 button {
   cursor: pointer;
 }
@@ -141,29 +142,31 @@ button {
 }
 
 /* ─── 일일 숙제 체크리스트 탭 ───────────────── */
-/* 가로 일렬로 나열, 스크롤 허용 */
+/* 이 컨테이너를 깨워서 화면 전체 폭으로 확장 */
 #dailyQuestList {
+  /* 뷰포트 전체 넓이 */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  /* 기존 container padding 보정 */
+  padding: 0 20px 20px;
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
   gap: 12px;
   overflow-x: auto;
-  padding-bottom: 12px; /* 스크롤바 여유 공간 */
 }
 
-/* 캐릭터별 래퍼 */
+/* 각 캐릭터 칸 */
 .daily-character {
   flex: none;
   width: 300px;
-  min-width: 300px;
-  margin: 0;            /* 위/아래 여백은 #dailyQuestList gap 으로 처리 */
+  margin: 0;         /* gap으로 간격 조절 */
   padding: 8px;
   border-radius: 8px;
   background: #f3faff;
-  box-sizing: border-box;
 }
 
-/* 각 퀘스트 박스 */
+/* 퀘스트 박스 */
 .daily-task {
   background: #e0f0ff;
   border-radius: 10px;
