@@ -69,6 +69,30 @@ function loadCharacters() {
     localStorage.setItem(silverKey, silverTime.dataset.until);
     div.appendChild(silverTime);
 
+    const editSilver = document.createElement("button");
+    editSilver.textContent = "⏰";
+    editSilver.title = "마지막 은동전 획득 시간 설정";
+    editSilver.style.marginLeft = "4px";
+    editSilver.onclick = () => {
+    const input = prompt(
+      "마지막 은동전 획득 시간 입력\n(예: 2025-05-05T13:00)\n혹은 “30분 전”처럼 상대시간: "
+    );
+    if (!input) return;
+    let dt;
+    if (input.includes("전")) {
+      // “30분 전” 같은 상대 시간 처리
+      const [num, unit] = input.match(/(\d+)(\D+)/).slice(1);
+      const m = { 분: 60, 시간: 3600 }[unit.replace(/[^가-힣]/g, "")] || 60;
+      dt = new Date(Date.now() - num * m * 1000);
+    } else {
+      dt = new Date(input);
+    }
+    const iso = dt.toISOString();
+    silverTime.dataset.until = iso;
+    localStorage.setItem(`${name}_silver_until`, iso);
+    updateProgress(); // 즉시 표시 업데이트
+  };
+  div.appendChild(editSilver);
     // 은동전 진행바
     const silverBar = document.createElement("div");
     silverBar.className = "bar";
@@ -102,6 +126,30 @@ function loadCharacters() {
     localStorage.setItem(tributeKey, tributeTime.dataset.until);
     div.appendChild(tributeTime);
 
+    const editTribute = document.createElement("button");
+    editTribute.textContent = "⏰";
+    editTribute.title = "마지막 공물 획득 시간 설정";
+    editTribute.style.marginLeft = "4px";
+    editTribute.onclick = () => {
+    const input = prompt(
+      "마지막 공물 획득 시간 입력\n(예: 2025-05-05T01:00)\n혹은 “12시간 전”처럼 상대시간: "
+    );
+    if (!input) return;
+    let dt;
+    if (input.includes("전")) {
+      const [num, unit] = input.match(/(\d+)(\D+)/).slice(1);
+      const m = { 분: 60, 시간: 3600 }[unit.replace(/[^가-힣]/g, "")] || 3600;
+      dt = new Date(Date.now() - num * m * 1000);
+    } else {
+      dt = new Date(input);
+    }
+    const iso = dt.toISOString();
+    tributeTime.dataset.until = iso;
+    localStorage.setItem(`${name}_tribute_until`, iso);
+    updateProgress();
+  };
+  div.appendChild(editTribute);
+  
     // 공물 진행바
     const tributeBar = document.createElement("div");
     tributeBar.className = "bar";
