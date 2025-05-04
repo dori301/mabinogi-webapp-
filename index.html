@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- ─── 탭 헤더 ───────────────── -->
   <div class="tab-header">
     <div class="tab-title">도리의 마비노기</div>
     <div class="tab-bar">
@@ -16,24 +15,24 @@
     </div>
   </div>
 
-  <!-- ─── 1번 탭: 은동전 / 공물 타이머 ───────────────── -->
   <div id="tab1" class="tab-content">
+    <!-- 은동전/공물 타이머 콘텐츠 -->
     <div class="container">
       <button onclick="addCharacter()">캐릭터 추가</button>
       <div id="characterList"></div>
     </div>
   </div>
 
-  <!-- ─── 2번 탭: 일일 숙제 체크리스트 ───────────────── -->
-  <div id="tab2" class="tab-content hidden">
+  <div id="tab2" class="tab-content">
+    <!-- 일일 숙제 체크리스트 콘텐츠 -->
     <div class="container">
       <h2>🗒️ 일일 숙제 체크리스트</h2>
       <div id="dailyQuestList"></div>
     </div>
   </div>
 
-  <!-- ─── 3번 탭: 심층 드랍 룬 ───────────────── -->
-  <div id="dropTab" class="tab-content hidden">
+  <div id="dropTab" class="tab-content">
+    <!-- 심층 드랍 룬 콘텐츠 -->
     <div class="container">
       <h2>🔮 심층 드랍 룬</h2>
       <table class="drop-table">
@@ -49,18 +48,14 @@
           <tr><td>알비 2</td><td>화염</td><td>초자연, 침식</td></tr>
           <tr><td>키아 1</td><td>극독, 강철, 궁극, 적혈</td><td>쇠약, 끈기</td></tr>
           <tr><td>키아 2</td><td>질풍, 역병</td><td>폭풍, 안정, 생명, 흡혈</td></tr>
-          <tr>
-            <td>라비 1</td>
-            <td>전율, 경이, 결투, 연격, 선고</td>
-            <td>초기, 성채, 얼어붙음, 제물, 위험, 전술가</td>
-          </tr>
+          <tr><td>라비 1</td><td>전율, 경이, 결투, 연격, 선고</td>
+              <td>초기, 성채, 얼어붙음, 제물, 위험, 전술가</td></tr>
           <tr><td>라비 2</td><td>격전, 격노, 고통</td><td>저격, 난투, 격동, 절망, 기습, 압도</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- ─── 스크립트 로드 ───────────────── -->
   <script src="script.js"></script>
 </body>
 </html>
