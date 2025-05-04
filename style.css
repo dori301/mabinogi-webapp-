@@ -92,7 +92,7 @@ button {
 /* 카드 */
 .character {
   flex: none;
-  width: 300px;
+  width: 360px;
   min-width: 300px;
   margin: 0; /* gap 으로 간격 처리 */
   margin-bottom: 12px;
