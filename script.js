@@ -48,7 +48,6 @@ function loadCharacters() {
     const silverInput = document.createElement("input");
     silverInput.type  = "number";
     silverInput.value = localStorage.getItem(name + "_silver") || 0;
-    // 식별용 dataset
     silverInput.dataset.name = name;
     silverInput.dataset.type = "silver";
     silverInput.oninput = () => {
@@ -65,34 +64,46 @@ function loadCharacters() {
     const silverKey = `${name}_silver_until`;
     silverTime.dataset.until = localStorage.getItem(silverKey)
       || new Date(Date.now() + COIN_INTERVAL_SEC * 1000).toISOString();
-    // 최초 저장
     localStorage.setItem(silverKey, silverTime.dataset.until);
     div.appendChild(silverTime);
 
+    // — 은동전 타이머 설정 버튼 —
     const editSilver = document.createElement("button");
     editSilver.textContent = "⏰";
     editSilver.title = "마지막 은동전 획득 시간 설정";
     editSilver.style.marginLeft = "4px";
     editSilver.onclick = () => {
-    const input = prompt(
-      "마지막 은동전 획득 시간 입력\n(예: 2025-05-05T13:00)\n혹은 “30분 전”처럼 상대시간: "
-    );
-    if (!input) return;
-    let dt;
-    if (input.includes("전")) {
-      // “30분 전” 같은 상대 시간 처리
-      const [num, unit] = input.match(/(\d+)(\D+)/).slice(1);
-      const m = { 분: 60, 시간: 3600 }[unit.replace(/[^가-힣]/g, "")] || 60;
-      dt = new Date(Date.now() - num * m * 1000);
-    } else {
-      dt = new Date(input);
-    }
-    const iso = dt.toISOString();
-    silverTime.dataset.until = iso;
-    localStorage.setItem(`${name}_silver_until`, iso);
-    updateProgress(); // 즉시 표시 업데이트
-  };
-  div.appendChild(editSilver);
+      const input = prompt(
+        "마지막 은동전 획득 시간 입력\n" +
+        "• HH:MM (예: 14:30)\n" +
+        "• ISO (예: 2025-05-05T02:20)\n" +
+        "• 상대시간 (예: 30분 전)"
+      );
+      if (!input) return;
+      const now = new Date();
+      let dt;
+      if (/^\d{1,2}:\d{2}$/.test(input)) {
+        const [h, m] = input.split(":").map(n => parseInt(n, 10));
+        dt = new Date(now);
+        dt.setHours(h, m, 0, 0);
+        if (dt > now) dt.setDate(dt.getDate() - 1);
+      } else if (/전/.test(input)) {
+        const match = input.match(/(\d+)\s*(분|시간)/);
+        if (!match) return alert("잘못된 형식입니다.");
+        const num = parseInt(match[1], 10);
+        const unit = match[2] === "시간" ? 3600 : 60;
+        dt = new Date(now.getTime() - num * unit * 1000);
+      } else {
+        dt = new Date(input);
+        if (isNaN(dt)) return alert("잘못된 형식입니다.");
+      }
+      const iso = dt.toISOString();
+      silverTime.dataset.until = iso;
+      localStorage.setItem(silverKey, iso);
+      updateProgress();
+    };
+    div.appendChild(editSilver);
+
     // 은동전 진행바
     const silverBar = document.createElement("div");
     silverBar.className = "bar";
@@ -126,30 +137,43 @@ function loadCharacters() {
     localStorage.setItem(tributeKey, tributeTime.dataset.until);
     div.appendChild(tributeTime);
 
+    // — 공물 타이머 설정 버튼 —
     const editTribute = document.createElement("button");
     editTribute.textContent = "⏰";
     editTribute.title = "마지막 공물 획득 시간 설정";
     editTribute.style.marginLeft = "4px";
     editTribute.onclick = () => {
-    const input = prompt(
-      "마지막 공물 획득 시간 입력\n(예: 2025-05-05T01:00)\n혹은 “12시간 전”처럼 상대시간: "
-    );
-    if (!input) return;
-    let dt;
-    if (input.includes("전")) {
-      const [num, unit] = input.match(/(\d+)(\D+)/).slice(1);
-      const m = { 분: 60, 시간: 3600 }[unit.replace(/[^가-힣]/g, "")] || 3600;
-      dt = new Date(Date.now() - num * m * 1000);
-    } else {
-      dt = new Date(input);
-    }
-    const iso = dt.toISOString();
-    tributeTime.dataset.until = iso;
-    localStorage.setItem(`${name}_tribute_until`, iso);
-    updateProgress();
-  };
-  div.appendChild(editTribute);
-  
+      const input = prompt(
+        "마지막 공물 획득 시간 입력\n" +
+        "• HH:MM (예: 02:20)\n" +
+        "• ISO (예: 2025-05-05T02:20)\n" +
+        "• 상대시간 (예: 12시간 전)"
+      );
+      if (!input) return;
+      const now = new Date();
+      let dt;
+      if (/^\d{1,2}:\d{2}$/.test(input)) {
+        const [h, m] = input.split(":").map(n => parseInt(n, 10));
+        dt = new Date(now);
+        dt.setHours(h, m, 0, 0);
+        if (dt > now) dt.setDate(dt.getDate() - 1);
+      } else if (/전/.test(input)) {
+        const match = input.match(/(\d+)\s*(분|시간)/);
+        if (!match) return alert("잘못된 형식입니다.");
+        const num = parseInt(match[1], 10);
+        const unit = match[2] === "시간" ? 3600 : 60;
+        dt = new Date(now.getTime() - num * unit * 1000);
+      } else {
+        dt = new Date(input);
+        if (isNaN(dt)) return alert("잘못된 형식입니다.");
+      }
+      const iso = dt.toISOString();
+      tributeTime.dataset.until = iso;
+      localStorage.setItem(tributeKey, iso);
+      updateProgress();
+    };
+    div.appendChild(editTribute);
+
     // 공물 진행바
     const tributeBar = document.createElement("div");
     tributeBar.className = "bar";
@@ -166,7 +190,6 @@ function loadCharacters() {
     useSilver.onclick = () => {
       silverInput.value = Math.max(0, silverInput.value - 10);
       silverInput.oninput();
-      // **더 이상 타이머는 초기화하지 않습니다**
     };
     const useTribute = document.createElement("button");
     useTribute.textContent = "공물 사용 (-1)";
