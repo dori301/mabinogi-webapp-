@@ -97,9 +97,10 @@ function loadCharacters() {
         dt = new Date(input);
         if (isNaN(dt)) return alert("잘못된 형식입니다.");
       }
-      const iso = dt.toISOString();
-      silverTime.dataset.until = iso;
-      localStorage.setItem(silverKey, iso);
+      const nextMs  = dt.getTime() + COIN_INTERVAL_SEC * 1000;
+      const nextIso = new Date(nextMs).toISOString();
+      silverTime.dataset.until   = nextIso;
+      localStorage.setItem(silverKey, nextIso);
       updateProgress();
     };
     div.appendChild(editSilver);
@@ -167,9 +168,10 @@ function loadCharacters() {
         dt = new Date(input);
         if (isNaN(dt)) return alert("잘못된 형식입니다.");
       }
-      const iso = dt.toISOString();
-      tributeTime.dataset.until = iso;
-      localStorage.setItem(tributeKey, iso);
+      const nextMs  = dt.getTime() + TRIBUTE_INTERVAL_SEC * 1000;
+      const nextIso = new Date(nextMs).toISOString();
+      tributeTime.dataset.until   = nextIso;
+      localStorage.setItem(tributeKey, nextIso);
       updateProgress();
     };
     div.appendChild(editTribute);
