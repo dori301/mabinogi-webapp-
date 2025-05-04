@@ -5,6 +5,7 @@
   font-style: normal;
 }
 
+/* 박스 모델: border-box */
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -17,86 +18,18 @@ body {
   padding: 20px;
 }
 
-/* 전체 컨테이너는 그대로 유지 */
+/* 기본 컨테이너 */
 .container {
   max-width: 700px;
   margin: 0 auto;
 }
 
-/* 버튼 커서 */
+/* 버튼 기본 */
 button {
   cursor: pointer;
 }
-
 .container > button {
   margin-bottom: 12px;
-}
-
-/* ─── 은동전/공물 타이머 탭 ───────────────── */
-#characterList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
-.character {
-  flex: 0 0 300px;
-  min-width: 300px;
-  margin-bottom: 12px;
-  min-height: 220px;
-  border: 1px solid #87cefa;
-  border-radius: 10px;
-  padding: 12px;
-  background-color: #e6f7ff;
-}
-
-.character label input[type="number"] {
-  width: 80px;
-  margin-left: 4px;
-}
-
-.character .timer {
-  white-space: nowrap;
-  margin-left: 6px;
-}
-
-.bar {
-  margin-top: 5px;
-  width: 100%;
-  height: 16px;
-  background-color: #d0e7ff;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.fill {
-  height: 100%;
-  background-color: #00bfff;
-  transition: width 0.5s ease;
-}
-
-.character button {
-  margin-top: 5px;
-  background: #ff4444;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 5px;
-}
-
-.character .use-buttons {
-  margin-top: 5px;
-}
-
-.character .use-buttons button {
-  background: #007acc;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  margin-right: 5px;
-  border-radius: 5px;
 }
 
 /* ─── 탭 헤더 ───────────────── */
@@ -141,32 +74,113 @@ button {
   display: none;
 }
 
-/* ─── 일일 숙제 체크리스트 탭 ───────────────── */
-/* 이 컨테이너를 깨워서 화면 전체 폭으로 확장 */
-#dailyQuestList {
-  /* 뷰포트 전체 넓이 */
+/* ─── 은동전/공물 타이머 탭 ───────────────── */
+/* 전체 화면 너비 가로 스크롤 */
+#characterList {
   width: 100vw;
   position: relative;
   left: 50%;
   margin-left: -50vw;
-  /* 기존 container padding 보정 */
-  padding: 0 20px 20px;
   display: flex;
+  flex-wrap: nowrap;
   gap: 12px;
   overflow-x: auto;
+  padding: 0 20px; /* body 패딩 보정 */
+  box-sizing: border-box;
 }
 
-/* 각 캐릭터 칸 */
+/* 카드 */
+.character {
+  flex: none;
+  width: 300px;
+  min-width: 300px;
+  margin: 0; /* gap 으로 간격 처리 */
+  margin-bottom: 12px;
+  min-height: 220px;
+  border: 1px solid #87cefa;
+  border-radius: 10px;
+  padding: 12px;
+  background-color: #e6f7ff;
+}
+
+/* 입력칸 폭 축소 */
+.character label input[type="number"] {
+  width: 80px;
+  margin-left: 4px;
+}
+
+/* 타이머 텍스트 */
+.character .timer {
+  white-space: nowrap;
+  margin-left: 6px;
+}
+
+/* 진행 바 */
+.bar {
+  margin-top: 5px;
+  width: 100%;
+  height: 16px;
+  background-color: #d0e7ff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background-color: #00bfff;
+  transition: width 0.5s ease;
+}
+
+/* 삭제 버튼 */
+.character button {
+  margin-top: 5px;
+  background: #ff4444;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+
+/* 사용 버튼 */
+.character .use-buttons {
+  margin-top: 5px;
+}
+.character .use-buttons button {
+  background: #007acc;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  margin-right: 5px;
+  border-radius: 5px;
+}
+
+/* ─── 일일 숙제 체크리스트 탭 ───────────────── */
+/* 전체 화면 너비 가로 스크롤 */
+#dailyQuestList {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 20px 20px; /* body 패딩/하단 여유 공간 보정 */
+  box-sizing: border-box;
+}
+
+/* 캐릭터별 래퍼 */
 .daily-character {
   flex: none;
   width: 300px;
-  margin: 0;         /* gap으로 간격 조절 */
+  min-width: 300px;
+  margin: 0; /* gap 으로 간격 처리 */
   padding: 8px;
   border-radius: 8px;
   background: #f3faff;
 }
 
-/* 퀘스트 박스 */
+/* 각 퀘스트 박스 */
 .daily-task {
   background: #e0f0ff;
   border-radius: 10px;
