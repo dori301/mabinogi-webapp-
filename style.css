@@ -208,3 +208,7 @@ button {
 .check-circle.checked {
   background-color: #007acc;
 }
+
+.tab-header > .tab-bar {
+  display: none;
+}
