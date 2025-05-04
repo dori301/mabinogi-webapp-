@@ -1,22 +1,29 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>마비노기 타이머 & 숙제</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- 탭 헤더 -->
   <div class="tab-header">
     <div class="tab-title">도리의 마비노기</div>
+    <div class="tab-bar">
+      <button class="tab-button active" onclick="showTab('tab1')">
+        은동전 / 공물 타이머
+      </button>
+      <button class="tab-button" onclick="showTab('tab2')">
+        일일 숙제 체크리스트
+      </button>
+      <!-- 새로 추가된 탭 버튼 -->
+      <button class="tab-button" onclick="showTab('dropTab')">
+        심층 드랍 룬
+      </button>
     </div>
   </div>
-  <div class="tab-bar">
-    <button class="tab-button active" onclick="showTab('tab1')">은동전 / 공물 타이머</button>
-    <button class="tab-button" onclick="showTab('tab2')">일일 숙제 체크리스트</button>
-    <button class="tab-button"       data-tab="dropTab">심층 드랍 룬</button>
-  </div>
 
+  <!-- 1번 탭: 은동전 / 공물 타이머 -->
   <div id="tab1" class="tab-content">
     <div class="container">
       <button onclick="addCharacter()">캐릭터 추가</button>
@@ -24,6 +31,7 @@
     </div>
   </div>
 
+  <!-- 2번 탭: 일일 숙제 체크리스트 -->
   <div id="tab2" class="tab-content hidden">
     <div class="container">
       <h2>🗒️ 일일 숙제 체크리스트</h2>
@@ -31,6 +39,7 @@
     </div>
   </div>
 
+  <!-- 3번 탭: 심층 드랍 룬 -->
   <div id="dropTab" class="tab-content hidden">
     <div class="container">
       <h2>🔮 심층 드랍 룬</h2>
@@ -53,14 +62,23 @@
       </table>
     </div>
   </div>
-  
+
+  <!-- 스크립트 로드 -->
   <script src="script.js"></script>
   <script>
     function showTab(id) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(id).classList.remove('hidden');
-      document.querySelector(`.tab-button[onclick="showTab('${id}')"]`).classList.add('active');
+      document
+        .querySelectorAll(".tab-content")
+        .forEach((el) => el.classList.add("hidden"));
+      document
+        .querySelectorAll(".tab-button")
+        .forEach((btn) => btn.classList.remove("active"));
+
+      // 선택된 탭만 보이게 & 버튼 active
+      document.getElementById(id).classList.remove("hidden");
+      document
+        .querySelector(`.tab-button[onclick="showTab('${id}')"]`)
+        .classList.add("active");
     }
   </script>
 </body>
