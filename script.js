@@ -2,27 +2,33 @@
 
 document.addEventListener("DOMContentLoaded", function () {
   initTabs();
+  showTab("tab1");          // 첫 탭 강제 표시
   loadCharacters();
   loadDailyQuestsForAll();
   resetIfNeeded();
 });
 
-// ─── 탭 전환 초기화 ─────────────────
+// 탭 초기화
 function initTabs() {
-  const buttons = document.querySelectorAll('.tab-button');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
+  document.querySelectorAll(".tab-button").forEach(btn => {
+    btn.addEventListener("click", () => {
       const id = btn.dataset.tab;
-      // 1) 모든 콘텐츠 숨기기
-      document.querySelectorAll('.tab-content')
-              .forEach(el => el.classList.add('hidden'));
-      // 2) 버튼 비활성화
-      buttons.forEach(b => b.classList.remove('active'));
-      // 3) 선택된 콘텐츠 + 버튼 활성화
-      document.getElementById(id).classList.remove('hidden');
-      btn.classList.add('active');
+      showTab(id);
     });
   });
+}
+
+// 탭 표시 함수
+function showTab(id) {
+  document.querySelectorAll(".tab-content")
+          .forEach(el => el.classList.add("hidden"));
+  document.querySelectorAll(".tab-button")
+          .forEach(b => b.classList.remove("active"));
+
+  document.getElementById(id).classList.remove("hidden");
+  document
+    .querySelector(`.tab-button[data-tab="${id}"]`)
+    .classList.add("active");
 }
 
 // ─── 은동전/공물 인터벌 정의 ─────────────────
