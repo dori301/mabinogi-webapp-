@@ -4,11 +4,33 @@ document.addEventListener("DOMContentLoaded", function () {
   loadCharacters();
   loadDailyQuestsForAll();
   resetIfNeeded();
+  initTabs(); // 탭 초기화
 });
 
+// ─── 탭 전환 초기화 ─────────────────
+function initTabs() {
+  const buttons = document.querySelectorAll('.tab-button');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      // 1) 모든 탭 콘텐츠 숨기기
+      document.querySelectorAll('.tab-content')
+              .forEach(el => el.classList.add('hidden'));
+      // 2) 모든 버튼 비활성화
+      buttons.forEach(b => b.classList.remove('active'));
+      // 3) 선택된 탭 콘텐츠 보이기 + 버튼 활성화
+      document.getElementById(target).classList.remove('hidden');
+      btn.classList.add('active');
+    });
+  });
+  // 페이지 로드시 기본 활성화 탭 클릭 처리
+  const first = document.querySelector('.tab-button.active');
+  if (first) first.click();
+}
+
 // ─── 은동전/공물 인터벌 정의 ─────────────────
-const COIN_INTERVAL_SEC    = 30 * 60;      // 30분 (초 단위)
-const TRIBUTE_INTERVAL_SEC = 12 * 60 * 60; // 12시간 (초 단위)
+const COIN_INTERVAL_SEC    = 30 * 60;      // 30분
+const TRIBUTE_INTERVAL_SEC = 12 * 60 * 60; // 12시간
 
 function formatHMS(totalSec) {
   const sec = totalSec % 60;
@@ -42,11 +64,11 @@ function loadCharacters() {
     title.textContent = name;
     div.appendChild(title);
 
-    // — 은동전 입력 + 타이머 —
+    // 은동전 입력 + 타이머
     const silverLabel = document.createElement("label");
     silverLabel.textContent = "은동전: ";
     const silverInput = document.createElement("input");
-    silverInput.type  = "number";
+    silverInput.type = "number";
     silverInput.value = localStorage.getItem(name + "_silver") || 0;
     silverInput.dataset.name = name;
     silverInput.dataset.type = "silver";
@@ -67,7 +89,7 @@ function loadCharacters() {
     localStorage.setItem(silverKey, silverTime.dataset.until);
     div.appendChild(silverTime);
 
-    // — 은동전 타이머 설정 버튼 —
+    // 은동전 타이머 설정 버튼
     const editSilver = document.createElement("button");
     editSilver.textContent = "⏰";
     editSilver.title = "마지막 은동전 획득 시간 설정";
@@ -97,9 +119,10 @@ function loadCharacters() {
         dt = new Date(input);
         if (isNaN(dt)) return alert("잘못된 형식입니다.");
       }
+      // 마지막 획득 시각(dt)에 인터벌 더하기
       const nextMs  = dt.getTime() + COIN_INTERVAL_SEC * 1000;
       const nextIso = new Date(nextMs).toISOString();
-      silverTime.dataset.until   = nextIso;
+      silverTime.dataset.until = nextIso;
       localStorage.setItem(silverKey, nextIso);
       updateProgress();
     };
@@ -113,11 +136,11 @@ function loadCharacters() {
     silverBar.appendChild(silverFill);
     div.appendChild(silverBar);
 
-    // — 공물 입력 + 타이머 —
+    // 공물 입력 + 타이머
     const tributeLabel = document.createElement("label");
     tributeLabel.textContent = "공물: ";
     const tributeInput = document.createElement("input");
-    tributeInput.type  = "number";
+    tributeInput.type = "number";
     tributeInput.value = localStorage.getItem(name + "_tribute") || 0;
     tributeInput.dataset.name = name;
     tributeInput.dataset.type = "tribute";
@@ -138,7 +161,7 @@ function loadCharacters() {
     localStorage.setItem(tributeKey, tributeTime.dataset.until);
     div.appendChild(tributeTime);
 
-    // — 공물 타이머 설정 버튼 —
+    // 공물 타이머 설정 버튼
     const editTribute = document.createElement("button");
     editTribute.textContent = "⏰";
     editTribute.title = "마지막 공물 획득 시간 설정";
@@ -168,9 +191,10 @@ function loadCharacters() {
         dt = new Date(input);
         if (isNaN(dt)) return alert("잘못된 형식입니다.");
       }
+      // 마지막 획득 시각(dt)에 인터벌 더하기
       const nextMs  = dt.getTime() + TRIBUTE_INTERVAL_SEC * 1000;
       const nextIso = new Date(nextMs).toISOString();
-      tributeTime.dataset.until   = nextIso;
+      tributeTime.dataset.until = nextIso;
       localStorage.setItem(tributeKey, nextIso);
       updateProgress();
     };
@@ -184,7 +208,7 @@ function loadCharacters() {
     tributeBar.appendChild(tributeFill);
     div.appendChild(tributeBar);
 
-    // — 사용 버튼 (타이머 리셋 제거) —
+    // 사용 버튼
     const useDiv = document.createElement("div");
     useDiv.className = "use-buttons";
     const useSilver = document.createElement("button");
@@ -203,7 +227,7 @@ function loadCharacters() {
     useDiv.appendChild(useTribute);
     div.appendChild(useDiv);
 
-    // — 삭제 버튼 —
+    // 삭제 버튼
     const delBtn = document.createElement("button");
     delBtn.textContent = "삭제";
     delBtn.onclick = () => {
