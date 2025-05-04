@@ -62,24 +62,5 @@
 
   <!-- ─── 스크립트 로드 ───────────────── -->
   <script src="script.js"></script>
-  <script>
-    // data-tab 속성 기반으로 버튼과 콘텐츠를 전환하도록 수정된 showTab()
-    function showTab(id) {
-      // 1) 모든 탭 콘텐츠 숨기기
-      document.querySelectorAll(".tab-content")
-              .forEach(el => el.classList.add("hidden"));
-      // 2) 모든 탭 버튼 비활성화
-      document.querySelectorAll(".tab-button")
-              .forEach(btn => btn.classList.remove("active"));
-      // 3) 선택된 탭 콘텐츠 보이기
-      document.getElementById(id).classList.remove("hidden");
-      // 4) data-tab = id 인 버튼에 active 추가
-      const btn = document.querySelector(`.tab-button[data-tab="${id}"]`);
-      if (btn) btn.classList.add("active");
-    }
-
-    // 페이지 로드시 첫 탭 보이기
-    document.addEventListener("DOMContentLoaded", () => showTab("tab1"));
-  </script>
 </body>
 </html>
