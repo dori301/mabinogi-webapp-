@@ -194,3 +194,22 @@ button.delete {
 .tab-bar {
   display: none !important;
 }
+
+/* 타이머 설정 ⏰ 버튼 */
+.character button {
+  /* 기존 스타일 유지 */
+}
+
+/* 오직 시간 설정 버튼만 작게 */
+.character button[title*="설정"] {
+  background: transparent;
+  color: var(--accent);
+  border: none;
+  padding: 2px 4px;
+  font-size: 0.9em;
+  vertical-align: middle;
+  transition: background-color .2s;
+}
+.character button[title*="설정"]:hover {
+  background-color: rgba(255,127,0,0.2);
+}
