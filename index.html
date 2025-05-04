@@ -10,15 +10,9 @@
   <div class="tab-header">
     <div class="tab-title">도리의 마비노기</div>
     <div class="tab-bar">
-      <button class="tab-button active" onclick="showTab('tab1')">
-        은동전 / 공물 타이머
-      </button>
-      <button class="tab-button" onclick="showTab('tab2')">
-        일일 숙제 체크리스트
-      </button>
-      <button class="tab-button" onclick="showTab('dropTab')">
-        심층 드랍 룬
-      </button>
+      <button class="tab-button active" data-tab="tab1">은동전 / 공물 타이머</button>
+      <button class="tab-button"       data-tab="tab2">일일 숙제 체크리스트</button>
+      <button class="tab-button"       data-tab="dropTab">심층 드랍 룬</button>
     </div>
   </div>
 
@@ -55,8 +49,11 @@
           <tr><td>알비 2</td><td>화염</td><td>초자연, 침식</td></tr>
           <tr><td>키아 1</td><td>극독, 강철, 궁극, 적혈</td><td>쇠약, 끈기</td></tr>
           <tr><td>키아 2</td><td>질풍, 역병</td><td>폭풍, 안정, 생명, 흡혈</td></tr>
-          <tr><td>라비 1</td><td>전율, 경이, 결투, 연격, 선고</td>
-              <td>초기, 성채, 얼어붙음, 제물, 위험, 전술가</td></tr>
+          <tr>
+            <td>라비 1</td>
+            <td>전율, 경이, 결투, 연격, 선고</td>
+            <td>초기, 성채, 얼어붙음, 제물, 위험, 전술가</td>
+          </tr>
           <tr><td>라비 2</td><td>격전, 격노, 고통</td><td>저격, 난투, 격동, 절망, 기습, 압도</td></tr>
         </tbody>
       </table>
@@ -66,19 +63,23 @@
   <!-- ─── 스크립트 로드 ───────────────── -->
   <script src="script.js"></script>
   <script>
+    // data-tab 속성 기반으로 버튼과 콘텐츠를 전환하도록 수정된 showTab()
     function showTab(id) {
-      // 모든 탭 숨기기
+      // 1) 모든 탭 콘텐츠 숨기기
       document.querySelectorAll(".tab-content")
               .forEach(el => el.classList.add("hidden"));
-      // 모든 버튼 비활성화
+      // 2) 모든 탭 버튼 비활성화
       document.querySelectorAll(".tab-button")
               .forEach(btn => btn.classList.remove("active"));
-      // 선택된 탭만 보이기 + 버튼 활성화
+      // 3) 선택된 탭 콘텐츠 보이기
       document.getElementById(id).classList.remove("hidden");
-      document
-        .querySelector(`.tab-button[onclick="showTab('${id}')"]`)
-        .classList.add("active");
+      // 4) data-tab = id 인 버튼에 active 추가
+      const btn = document.querySelector(`.tab-button[data-tab="${id}"]`);
+      if (btn) btn.classList.add("active");
     }
+
+    // 페이지 로드시 첫 탭 보이기
+    document.addEventListener("DOMContentLoaded", () => showTab("tab1"));
   </script>
 </body>
 </html>
