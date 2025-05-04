@@ -1,6 +1,5 @@
 // script.js
 
-// 페이지 로드 시 초기화
 document.addEventListener("DOMContentLoaded", function () {
   loadCharacters();
   loadDailyQuestsForAll();
@@ -11,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
 const COIN_INTERVAL_SEC    = 30 * 60;      // 30분 (초 단위)
 const TRIBUTE_INTERVAL_SEC = 12 * 60 * 60; // 12시간 (초 단위)
 
-// 남은 시간을 시·분·초로 분해
 function formatHMS(totalSec) {
   const sec = totalSec % 60;
   const min = Math.floor((totalSec % 3600) / 60);
@@ -19,21 +17,17 @@ function formatHMS(totalSec) {
   return { hr, min, sec };
 }
 
-// 캐릭터 추가
 function addCharacter() {
   const name = prompt("캐릭터 이름을 입력하세요:");
   if (!name) return;
-
   const chars = JSON.parse(localStorage.getItem("characters") || "[]");
   if (chars.includes(name)) return;
-
   chars.push(name);
   localStorage.setItem("characters", JSON.stringify(chars));
   loadCharacters();
   loadDailyQuestsForAll();
 }
 
-// 캐릭터 읽어와서 DOM에 출력
 function loadCharacters() {
   const characters = JSON.parse(localStorage.getItem("characters") || "[]");
   const container  = document.getElementById("characterList");
@@ -50,10 +44,13 @@ function loadCharacters() {
 
     // — 은동전 입력 + 타이머 —
     const silverLabel = document.createElement("label");
-    silverLabel.innerHTML = "은동전: ";
+    silverLabel.textContent = "은동전: ";
     const silverInput = document.createElement("input");
     silverInput.type  = "number";
     silverInput.value = localStorage.getItem(name + "_silver") || 0;
+    // 식별용 dataset
+    silverInput.dataset.name = name;
+    silverInput.dataset.type = "silver";
     silverInput.oninput = () => {
       localStorage.setItem(name + "_silver", silverInput.value);
       updateProgress();
@@ -66,9 +63,9 @@ function loadCharacters() {
     silverTime.dataset.name     = name;
     silverTime.dataset.interval = COIN_INTERVAL_SEC;
     const silverKey = `${name}_silver_until`;
-    // 저장된 만료 시점이 있으면 불러오고, 없으면 지금 + 30분
     silverTime.dataset.until = localStorage.getItem(silverKey)
       || new Date(Date.now() + COIN_INTERVAL_SEC * 1000).toISOString();
+    // 최초 저장
     localStorage.setItem(silverKey, silverTime.dataset.until);
     div.appendChild(silverTime);
 
@@ -82,10 +79,12 @@ function loadCharacters() {
 
     // — 공물 입력 + 타이머 —
     const tributeLabel = document.createElement("label");
-    tributeLabel.innerHTML = "공물: ";
+    tributeLabel.textContent = "공물: ";
     const tributeInput = document.createElement("input");
     tributeInput.type  = "number";
     tributeInput.value = localStorage.getItem(name + "_tribute") || 0;
+    tributeInput.dataset.name = name;
+    tributeInput.dataset.type = "tribute";
     tributeInput.oninput = () => {
       localStorage.setItem(name + "_tribute", tributeInput.value);
       updateProgress();
@@ -111,7 +110,7 @@ function loadCharacters() {
     tributeBar.appendChild(tributeFill);
     div.appendChild(tributeBar);
 
-    // — 사용 버튼 —
+    // — 사용 버튼 (타이머 리셋 제거) —
     const useDiv = document.createElement("div");
     useDiv.className = "use-buttons";
     const useSilver = document.createElement("button");
@@ -119,19 +118,13 @@ function loadCharacters() {
     useSilver.onclick = () => {
       silverInput.value = Math.max(0, silverInput.value - 10);
       silverInput.oninput();
-      // 사용 시점 타이머 리셋 & 저장
-      const next = new Date(Date.now() + COIN_INTERVAL_SEC * 1000).toISOString();
-      silverTime.dataset.until = next;
-      localStorage.setItem(silverKey, next);
+      // **더 이상 타이머는 초기화하지 않습니다**
     };
     const useTribute = document.createElement("button");
     useTribute.textContent = "공물 사용 (-1)";
     useTribute.onclick = () => {
       tributeInput.value = Math.max(0, tributeInput.value - 1);
       tributeInput.oninput();
-      const next = new Date(Date.now() + TRIBUTE_INTERVAL_SEC * 1000).toISOString();
-      tributeTime.dataset.until = next;
-      localStorage.setItem(tributeKey, next);
     };
     useDiv.appendChild(useSilver);
     useDiv.appendChild(useTribute);
@@ -159,16 +152,13 @@ function loadCharacters() {
   updateProgress();
 }
 
-// 진행바 비율 계산
 function updateProgress() {
   const characters = JSON.parse(localStorage.getItem("characters") || "[]");
   characters.forEach((name) => {
     document.querySelectorAll(".character").forEach((div) => {
       if (div.querySelector("h3").textContent !== name) return;
-
       const silver  = parseInt(localStorage.getItem(name + "_silver")  || 0);
       const tribute = parseInt(localStorage.getItem(name + "_tribute") || 0);
-
       const [silverFill, tributeFill] = div.querySelectorAll(".fill");
       silverFill.style.width  = Math.min(silver, 100)  + "%";
       tributeFill.style.width = Math.min(tribute * 10, 100) + "%";
@@ -176,7 +166,7 @@ function updateProgress() {
   });
 }
 
-// --- 일일 숙제 체크리스트 로직 그대로 유지 ---
+// 일일 숙제 체크리스트 (변경 없음)
 const dailyQuests = [
   { title: "검은 구멍", max: 3 },
   { title: "소환의 결계", max: 2 },
@@ -193,7 +183,6 @@ function loadDailyQuestsForAll() {
   characters.forEach((name) => {
     const wrapper = document.createElement("div");
     wrapper.className = "daily-character";
-
     const title = document.createElement("h3");
     title.textContent = name;
     wrapper.appendChild(title);
@@ -201,7 +190,6 @@ function loadDailyQuestsForAll() {
     dailyQuests.forEach((task) => {
       const taskDiv = document.createElement("div");
       taskDiv.className = "daily-task";
-
       const label = document.createElement("h4");
       label.textContent = task.title;
       taskDiv.appendChild(label);
@@ -235,7 +223,6 @@ function loadDailyQuestsForAll() {
   });
 }
 
-// 매일 오전 6시 리셋
 function resetIfNeeded() {
   const lastReset = localStorage.getItem("daily_reset_time");
   const now       = new Date();
@@ -253,7 +240,7 @@ function resetIfNeeded() {
   }
 }
 
-// 타이머 업데이트 및 자동 리셋
+// ─── 타이머 업데이트 및 자동 +1/리셋 로직 ─────────────────
 setInterval(() => {
   document.querySelectorAll(".timer").forEach(el => {
     const interval = parseInt(el.dataset.interval, 10);
@@ -265,14 +252,21 @@ setInterval(() => {
     let end  = new Date(el.dataset.until);
     let diff = Math.floor((end - new Date()) / 1000);
 
-    // 만료 시점 도달하면 interval로 재설정 및 저장
+    // 타이머 만료 시: 자동 +1, interval로 재설정, 저장
     if (diff <= 0) {
+      // 1) 자동 +1
+      const input = document.querySelector(`input[data-name="${name}"][data-type="${interval===COIN_INTERVAL_SEC?'silver':'tribute'}"]`);
+      input.value = (parseInt(input.value,10) || 0) + 1;
+      input.oninput();
+
+      // 2) 새로운 만료 시점 설정
       diff = interval;
       const next = new Date(Date.now() + interval * 1000).toISOString();
       el.dataset.until = next;
       localStorage.setItem(key, next);
     }
 
+    // 남은 시간 표시
     const { hr, min, sec } = formatHMS(diff);
     el.textContent = interval === COIN_INTERVAL_SEC
       ? ` (${min}분 ${sec}초 후 +1)`
