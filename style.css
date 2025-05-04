@@ -172,3 +172,25 @@ button:hover {
 button.delete {
   background-color: #cc3300;
 }
+
+.check-circle {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;                 /* 간격도 약간 늘렸습니다 */
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+
+  /* 클릭 영역 더 확보하고 싶으면 padding 추가 */
+  /* padding: 4px; */
+}
+
+.check-circle.checked {
+  background-color: var(--accent);
+}
+
+.tab-bar {
+  display: none !important;
+}
