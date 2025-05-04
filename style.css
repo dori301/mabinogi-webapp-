@@ -11,6 +11,11 @@ body {
   color: #333;
   margin: 0;
   padding: 20px;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
 }
 
 .container {
@@ -26,7 +31,7 @@ button {
   margin-bottom: 12px;
 }
 
-/* ─── 은동전/공물 카드 레이아웃 ───────────────── */
+/* ─── 은동전/공물 타이머 탭 ───────────────── */
 #characterList {
   display: flex;
   flex-wrap: wrap;
@@ -44,7 +49,6 @@ button {
   border-radius: 10px;
   padding: 12px;
   background-color: #e6f7ff;
-  box-sizing: border-box;
 }
 
 .character label input[type="number"] {
@@ -94,7 +98,7 @@ button {
   border-radius: 5px;
 }
 
-/* ─── 탭 레이아웃 ───────────────── */
+/* ─── 탭 헤더 ───────────────── */
 .tab-header {
   background-color: #dceeff;
   border-bottom: 2px solid #007acc;
@@ -136,25 +140,23 @@ button {
   display: none;
 }
 
-/* ─── 일일 숙제 체크리스트 ───────────────── */
-
-/* 컨테이너를 flex로 변경해 카드처럼 나열 */
+/* ─── 일일 숙제 체크리스트 탭 ───────────────── */
+/* 세로 한 칼럼으로 나열 */
 #dailyQuestList {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
   gap: 12px;
-  justify-content: flex-start;
 }
 
-/* 각 캐릭터별 래퍼 */
+/* 캐릭터별 래퍼 */
 .daily-character {
-  flex: 0 0 300px;
-  min-width: 300px;
+  flex: none;
+  width: 300px;
   margin-bottom: 12px;
   padding: 8px;
   border-radius: 8px;
   background: #f3faff;
-  box-sizing: border-box;
 }
 
 /* 각 퀘스트 박스 */
@@ -169,11 +171,11 @@ button {
   margin: 0 0 4px 0;
 }
 
-/* 체크 원 크기 축소 */
+/* 체크 원 */
 .check-circle {
   display: inline-block;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border: 2px solid #007acc;
   border-radius: 50%;
   margin-right: 4px;
