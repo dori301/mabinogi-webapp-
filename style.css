@@ -245,3 +245,7 @@ button.delete {
 .tab-content.hidden {
   display: none;
 }
+
+#resetQuests {
+  margin: 0 0 12px; /* 아래쪽 여백 추가 */
+}
