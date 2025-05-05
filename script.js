@@ -10,7 +10,20 @@ document.addEventListener("DOMContentLoaded", function () {
   loadDailyQuestsForAll();   // 일일 숙제 체크리스트 초기화
   resetIfNeeded();           // 매일 6시 리셋 로직
 });
+// 수동 리셋 버튼 핸들러
+document.getElementById("resetQuests").addEventListener("click", () => {
+  // 1) localStorage에서 모든 quest_ 로 시작하는 키 삭제
+  Object.keys(localStorage).forEach(key => {
+    if (key.startsWith("quest_")) {
+      localStorage.removeItem(key);
+    }
+  });
+  // 2) 리셋 타임도 갱신(선택)
+  localStorage.setItem("daily_reset_time", new Date().toISOString());
 
+  // 3) UI 다시 그리기
+  loadDailyQuestsForAll();
+});
 // ─────────────────────────────────────────────────────────
 // 2) 탭 전환 관련 함수
 // ─────────────────────────────────────────────────────────
